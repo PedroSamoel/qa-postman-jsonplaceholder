@@ -4,211 +4,236 @@
 		"name": "API JSONPlaceholder - Portifólio",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "46825438",
-		"_collection_link": "https://pedrosamoel.postman.co/workspace/API-JSONPlaceholder---Portif%C3%B3li~75a7721d-3a7e-4e43-8db1-cf7cbdb70e48/collection/46825438-37518f2f-314b-4a44-a392-8c57fa17dd53?action=share&source=collection_link&creator=46825438"
+		"_collection_link": "https://pedrosamoel.postman.co/workspace/API-JSONPlaceholder---Portif%25C3%25B3li~75a7721d-3a7e-4e43-8db1-cf7cbdb70e48/collection/46825438-37518f2f-314b-4a44-a392-8c57fa17dd53?action=share&source=collection_link&creator=46825438"
 	},
 	"item": [
 		{
 			"name": "Collections",
-			"item": []
-		},
-		{
-			"name": "Listar todos os usuários",
-			"event": [
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// 1) Status HTTP deve ser 200 (OK)\r",
-							"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
-							"\r",
-							"// 2) O conteúdo deve ser JSON\r",
-							"pm.test(\"JSON válido\", () => pm.response.to.be.json);\r",
-							"\r",
-							"// 3) Tempo de resposta aceitável (SLA simples)\r",
-							"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800));\r",
-							"\r",
-							"// 4) O corpo deve ser uma lista com itens\r",
-							"const data = pm.response.json();\r",
-							"pm.test(\"É array e contem informações\", () => Array.isArray(data) && data.length > 0);\r",
-							"\r",
-							"// 5) (Encadeamento) Salvar o primeiro id de usuário para próximos testes\r",
-							"pm.environment.set(\"userId\", data[0].id);\r",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Listar todos os usuários",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1) Status HTTP deve ser 200 (OK)\r",
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"// 2) O conteúdo deve ser JSON\r",
+									"pm.test(\"JSON válido\", () => pm.response.to.be.json);\r",
+									"\r",
+									"// 3) Tempo de resposta aceitável (SLA simples)\r",
+									"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800));\r",
+									"\r",
+									"// 4) O corpo deve ser uma lista com itens\r",
+									"const userList = pm.response.json();\r",
+									"pm.test(\"É array e contem informações\", () => Array.isArray(userList) && userList.length > 0);\r",
+									"\r",
+									"// encadeamento: salvar um id existente para novos testes\r",
+									"pm.environment.set(\"userId\", userList[0].id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/users",
-					"host": [
-						"{{base_url}}"
 					],
-					"path": [
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Detalhar usuário",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"if (!pm.environment.get(\"userId\")) {\r",
-							"  pm.environment.set(\"userId\", 1); // fallback seguro\r",
-							"}\r",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// 1) Status e formato\r",
-							"pm.test(\"Status é 200\", () => pm.response.to.have.status(200));\r",
-							"pm.test(\"Retorno é JSON\", () => pm.response.to.be.json);\r",
-							"\r",
-							"// 2) Tempo de resposta (SLA simples)\r",
-							"pm.test(\"Tempo < 800ms\", () =>\r",
-							"  pm.expect(pm.response.responseTime).to.be.below(800)\r",
-							");\r",
-							"\r",
-							"// 3) Conteúdo mínimo + tipos (para objeto /users/{{userId}})\r",
-							"const u = pm.response.json();\r",
-							"\r",
-							"pm.test(\"É um objeto\", () => pm.expect(u).to.be.an(\"object\"));\r",
-							"\r",
-							"pm.test(\"Tem id, name e email\", () =>\r",
-							"  pm.expect(u).to.include.all.keys(\"id\", \"name\", \"email\")\r",
-							");\r",
-							"\r",
-							"pm.test(\"Tipos de informações corretas\", () => {\r",
-							"  pm.expect(u.id).to.be.a(\"number\");\r",
-							"  pm.expect(u.name).to.be.a(\"string\");\r",
-							"  pm.expect(u.email).to.be.a(\"string\");\r",
-							"});\r",
-							"\r",
-							"\r",
-							"// 5) Status 200 ou 404 tratado\r",
-							"if (pm.response.code === 200) {\r",
-							"  pm.test(\"Usuário encontrado\", () => {\r",
-							"    pm.response.to.have.status(200);\r",
-							"  });\r",
-							"} else if (pm.response.code === 404) {\r",
-							"  pm.test(\"Usuário não encontrado\", () => {\r",
-							"    pm.response.to.have.status(404);\r",
-							"  });\r",
-							"  console.warn(\"Usuário não encontrado. Verifique se {{userId}} ∈ [1..10].\");\r",
-							"} else {\r",
-							"  pm.test(\"Status inesperado\", () => {\r",
-							"    pm.expect.fail(`Recebi ${pm.response.code}, esperado 200 ou 404.`);\r",
-							"  });\r",
-							"}\r",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/users/{{userId}}",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"users",
-						"{{userId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Cadastrar um usuário",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Status code correto para criação\r",
-							"pm.test(\"Created 201\", () => pm.response.to.have.status(201))\r",
-							"\r",
-							"// Confirmação de arquivo JSON\r",
-							"pm.test(\"JSON válido\", () => pm.response.to.be.json)\r",
-							"\r",
-							"// Tempo de resposta\r",
-							"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800))\r",
-							"\r",
-							"// Conteúdo mínimo esperado e tipos\r",
-							"const u = pm.response.json()\r",
-							"pm.test(\"ID retornado\", () => u && u.id !== undefined)\r",
-							"pm.test(\"Tipos básicos OK\", () => {\r",
-							"    pm.expect(typeof u.name).to.eql(\"string\")\r",
-							"    pm.expect(typeof u.username).to.eql(\"string\")\r",
-							"    pm.expect(typeof u.email).to.eql(\"string\")\r",
-							"})\r",
-							"\r",
-							"// Salvar o ID novo para os testes subsequentes\r",
-							"pm.environment.set(\"userId\", u.id)"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Teste Teste\",\r\n    \"username\": \"teste_teste\",\r\n    \"email\": \"teste.teste@hotmail.com\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{base_url}}/users",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"users"
-					]
-				}
-			},
-			"response": [
 				{
-					"name": "201 – Usuário criado com sucesso",
-					"originalRequest": {
+					"name": "Detalhar usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1) Verificação de status code\r",
+									"pm.test(\"Status é 200 ou 404\", () => {\r",
+									"  pm.expect([200, 404]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retorno de arquivo é JSON\", () => pm.response.to.be.json);\r",
+									"\r",
+									"// 2) SLA aceitável\r",
+									"pm.test(\"Tempo < 800ms\", () =>\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(800)\r",
+									");\r",
+									"\r",
+									"// 3) Parse seguro\r",
+									"let u;\r",
+									"try {\r",
+									"  u = pm.response.json();\r",
+									"} catch (e) {\r",
+									"  u = {};\r",
+									"  console.error(\"Falha ao parsear JSON:\", e);\r",
+									"}\r",
+									"\r",
+									"// 4) Se for sucesso (200)\r",
+									"if (pm.response.code === 200) {\r",
+									"  pm.test(\"Campos validados\", () => pm.expect(u).to.be.an(\"object\"));\r",
+									"  pm.test(\"Tem id, name e email (Usuário validado)\", () =>\r",
+									"    pm.expect(u).to.include.all.keys(\"id\", \"name\", \"email\")\r",
+									"  );\r",
+									"  pm.test(\"Informações corretas (Regras de contrato)\", () => {\r",
+									"    pm.expect(u.id).to.be.a(\"number\");\r",
+									"    pm.expect(u.name).to.be.a(\"string\");\r",
+									"    pm.expect(u.email).to.be.a(\"string\");\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									"// 5) Se for 404\r",
+									"if (pm.response.code === 404) {\r",
+									"  pm.test(\"Usuário inválido\", () => {\r",
+									"    pm.expect.fail(\"UserId fora do intervalo esperado (usuarios totais nessa API são 10)\");\r",
+									"  });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"userId\")) {\r",
+									"  pm.environment.set(\"userId\", 1); // fallback seguro\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/{{userId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar um usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Status code correto para criação 201\r",
+									"pm.test(\"Status 201 (Created)\", () => pm.response.to.have.status(201))\r",
+									"\r",
+									"// Confirmação de arquivo JSON\r",
+									"pm.test(\"JSON válido\", () => pm.response.to.be.json)\r",
+									"\r",
+									"// Tempo de resposta\r",
+									"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800))\r",
+									"\r",
+									"// Parse seguro\r",
+									"let newUser;\r",
+									"try {\r",
+									"  newUser = pm.response.json();\r",
+									"} catch (e) {\r",
+									"  newUser = {};\r",
+									"  console.error(\"Falha ao parsear JSON:\", e);\r",
+									"}\r",
+									"\r",
+									"// Conteúdo mínimo esperado e tipos\r",
+									"const u = pm.response.json()\r",
+									"pm.test(\"ID retornado\", () => u && u.id !== undefined)\r",
+									"pm.test(\"Tipos básicos OK\", () => {\r",
+									"    pm.expect(typeof u.name).to.eql(\"string\")\r",
+									"    pm.expect(typeof u.username).to.eql(\"string\")\r",
+									"    pm.expect(typeof u.email).to.eql(\"string\")\r",
+									"})\r",
+									"\r",
+									"// 5) Campos básicos devem existir\r",
+									"pm.test(\"Contém id\", () => pm.expect(newUser).to.have.property(\"id\"));\r",
+									"pm.test(\"Contém name, username e email (Usuário validado)\", () => {\r",
+									"  pm.expect(newUser).to.have.property(\"name\");\r",
+									"  pm.expect(newUser).to.have.property(\"username\");\r",
+									"  pm.expect(newUser).to.have.property(\"email\");\r",
+									"});\r",
+									"\r",
+									"// 6) Tipos corretos\r",
+									"pm.test(\"Informações corretas (Regras de contrato)\", () => {\r",
+									"  pm.expect(newUser.id).to.be.a(\"number\");\r",
+									"  pm.expect(newUser.name).to.be.a(\"string\");\r",
+									"  pm.expect(newUser.username).to.be.a(\"string\");\r",
+									"  pm.expect(newUser.email).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"// 7) Encadeamento: salvar o id criado, mas separado\r",
+									"pm.environment.set(\"createdUserId\", newUser.id);\r",
+									"\r",
+									"// 8) Resetar userId para um válido (1), evitando erro nos próximos 'GET'\r",
+									"pm.environment.set(\"userId\", 1);\r",
+									"\r",
+									"// (Opcional) log para debug\r",
+									"console.log(\"Usuário criado (fake):\", newUser);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -230,113 +255,169 @@
 							]
 						}
 					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": null,
-					"header": [
+					"response": [
 						{
-							"key": "Date",
-							"value": "Wed, 27 Aug 2025 22:05:16 GMT"
+							"name": "Status 201 – Usuário criado com sucesso",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Teste Teste\",\r\n    \"username\": \"teste_teste\",\r\n    \"email\": \"teste.teste@hotmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 30 Aug 2025 03:54:53 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "106"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "access-control-allow-credentials",
+									"value": "true"
+								},
+								{
+									"key": "access-control-expose-headers",
+									"value": "Location"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"6a-eafpnr8jS8OXwdyaLoi4iCRiYHE\""
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "location",
+									"value": "https://jsonplaceholder.typicode.com/users/11"
+								},
+								{
+									"key": "nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"response_headers\":[\"Via\"],\"max_age\":3600,\"success_fraction\":0.01,\"failure_fraction\":0.1}"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "report-to",
+									"value": "{\"group\":\"heroku-nel\",\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?s=J15yKdJttBjWigmmhli5VDS8JOvJ8CoUSliQ2NOl1E0%3D\\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\\u0026ts=1756526093\"}],\"max_age\":3600}"
+								},
+								{
+									"key": "reporting-endpoints",
+									"value": "heroku-nel=\"https://nel.heroku.com/reports?s=J15yKdJttBjWigmmhli5VDS8JOvJ8CoUSliQ2NOl1E0%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1756526093\""
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "vary",
+									"value": "Origin, X-HTTP-Method-Override, Accept-Encoding"
+								},
+								{
+									"key": "via",
+									"value": "2.0 heroku-router"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "1000"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "999"
+								},
+								{
+									"key": "x-ratelimit-reset",
+									"value": "1756526141"
+								},
+								{
+									"key": "cf-cache-status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "97715971fbf2f227-GRU"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"Teste Teste\",\n    \"username\": \"teste_teste\",\n    \"email\": \"teste.teste@hotmail.com\",\n    \"id\": 11\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "106"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "access-control-allow-credentials",
-							"value": "true"
-						},
-						{
-							"key": "access-control-expose-headers",
-							"value": "Location"
-						},
-						{
-							"key": "Cache-Control",
-							"value": "no-cache"
-						},
-						{
-							"key": "etag",
-							"value": "W/\"6a-eafpnr8jS8OXwdyaLoi4iCRiYHE\""
-						},
-						{
-							"key": "expires",
-							"value": "-1"
-						},
-						{
-							"key": "location",
-							"value": "https://jsonplaceholder.typicode.com/users/11"
-						},
-						{
-							"key": "nel",
-							"value": "{\"report_to\":\"heroku-nel\",\"response_headers\":[\"Via\"],\"max_age\":3600,\"success_fraction\":0.01,\"failure_fraction\":0.1}"
-						},
-						{
-							"key": "pragma",
-							"value": "no-cache"
-						},
-						{
-							"key": "report-to",
-							"value": "{\"group\":\"heroku-nel\",\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?s=SoSBE70Z3XdtIwKpyvWK%2B5BqljpTRS5lSNC7D8lxsFU%3D\\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\\u0026ts=1756332316\"}],\"max_age\":3600}"
-						},
-						{
-							"key": "reporting-endpoints",
-							"value": "heroku-nel=\"https://nel.heroku.com/reports?s=SoSBE70Z3XdtIwKpyvWK%2B5BqljpTRS5lSNC7D8lxsFU%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1756332316\""
-						},
-						{
-							"key": "Server",
-							"value": "cloudflare"
-						},
-						{
-							"key": "vary",
-							"value": "Origin, X-HTTP-Method-Override, Accept-Encoding"
-						},
-						{
-							"key": "via",
-							"value": "2.0 heroku-router"
-						},
-						{
-							"key": "x-content-type-options",
-							"value": "nosniff"
-						},
-						{
-							"key": "x-powered-by",
-							"value": "Express"
-						},
-						{
-							"key": "x-ratelimit-limit",
-							"value": "1000"
-						},
-						{
-							"key": "x-ratelimit-remaining",
-							"value": "999"
-						},
-						{
-							"key": "x-ratelimit-reset",
-							"value": "1756332363"
-						},
-						{
-							"key": "cf-cache-status",
-							"value": "DYNAMIC"
-						},
-						{
-							"key": "CF-RAY",
-							"value": "975ede8fbd3e3015-MIA"
-						},
-						{
-							"key": "alt-svc",
-							"value": "h3=\":443\"; ma=86400"
+							"name": "Status 400 – Requisição inválida",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Teste Teste\",\r\n  \"username\": \"teste_teste\",\r\n  \"email\": \r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": "javascript",
+							"header": [],
+							"cookie": [],
+							"body": ""
 						}
-					],
-					"cookie": [],
-					"body": "{\n    \"name\": \"Teste Teste\",\n    \"username\": \"teste_teste\",\n    \"email\": \"teste.teste@hotmail.com\",\n    \"id\": 11\n}"
+					]
 				}
 			]
 		}
