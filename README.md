@@ -47,7 +47,6 @@ para criar e validar cenários de **CRUD** (Create, Read, Update, Delete).
 ![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=PedroSamoel&theme=merko)
 
 
-## 📬 Contato
-- [LinkedIn](linkedin.com/in/pedro-samoel)  
-- [GitHub](github.com/PedroSamoel)  
-- 📩 pedrosamoel.qa@gmail.com
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pedro-samoel/)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/PedroSamoel)
+[![Email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:pedrosamoel.qa@gmail.com)
