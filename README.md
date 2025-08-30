@@ -39,7 +39,7 @@ para criar e validar cenários de **CRUD** (Create, Read, Update, Delete).
 ![Repo size](https://img.shields.io/github/repo-size/PedroSamoel/qa-postman-jsonplaceholder)
 ![Stars](https://img.shields.io/github/stars/PedroSamoel/qa-postman-jsonplaceholder?style=social)
 ![Forks](https://img.shields.io/github/forks/PedroSamoel/qa-postman-jsonplaceholder?style=social)
-![Last commit](https://img.shields.io/github/last-commit/SEU-USUARIO/qa-postman-jsonplaceholder)
+![Last commit](https://img.shields.io/github/last-commit/PedroSamoel/qa-postman-jsonplaceholder)
 
 ---
 
