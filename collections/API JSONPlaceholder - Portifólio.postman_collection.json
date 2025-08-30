@@ -4,7 +4,7 @@
 		"name": "API JSONPlaceholder - Portifólio",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "46825438",
-		"_collection_link": "https://pedrosamoel.postman.co/workspace/API-JSONPlaceholder---Portif%25C3%25B3li~75a7721d-3a7e-4e43-8db1-cf7cbdb70e48/collection/46825438-37518f2f-314b-4a44-a392-8c57fa17dd53?action=share&source=collection_link&creator=46825438"
+		"_collection_link": "https://pedrosamoel.postman.co/workspace/API-JSONPlaceholder---Portif%C3%B3li~75a7721d-3a7e-4e43-8db1-cf7cbdb70e48/collection/46825438-37518f2f-314b-4a44-a392-8c57fa17dd53?action=share&source=collection_link&creator=46825438"
 	},
 	"item": [
 		{
@@ -28,7 +28,7 @@
 									"\r",
 									"// 4) O corpo deve ser uma lista com itens\r",
 									"const userList = pm.response.json();\r",
-									"pm.test(\"É array e contem informações\", () => Array.isArray(userList) && userList.length > 0);\r",
+									"pm.test(\"(Usuários listados) É array e contêm informações\", () => Array.isArray(userList) && userList.length > 0);\r",
 									"\r",
 									"// encadeamento: salvar um id existente para novos testes\r",
 									"pm.environment.set(\"userId\", userList[0].id);\r",
@@ -166,16 +166,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Status code correto para criação 201\r",
-									"pm.test(\"Status 201 (Created)\", () => pm.response.to.have.status(201))\r",
+									"// 1) Status code correto para criação\r",
+									"pm.test(\"Status 201 (Created)\", () => pm.response.to.have.status(201));\r",
 									"\r",
-									"// Confirmação de arquivo JSON\r",
-									"pm.test(\"JSON válido\", () => pm.response.to.be.json)\r",
+									"// 2) Conteúdo deve ser JSON\r",
+									"pm.test(\"JSON válido\", () => pm.response.to.be.json);\r",
 									"\r",
-									"// Tempo de resposta\r",
-									"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800))\r",
+									"// 3) SLA de tempo de resposta\r",
+									"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800));\r",
 									"\r",
-									"// Parse seguro\r",
+									"// 4) Parse seguro da resposta\r",
 									"let newUser;\r",
 									"try {\r",
 									"  newUser = pm.response.json();\r",
@@ -184,39 +184,29 @@
 									"  console.error(\"Falha ao parsear JSON:\", e);\r",
 									"}\r",
 									"\r",
-									"// Conteúdo mínimo esperado e tipos\r",
-									"const u = pm.response.json()\r",
-									"pm.test(\"ID retornado\", () => u && u.id !== undefined)\r",
-									"pm.test(\"Tipos básicos OK\", () => {\r",
-									"    pm.expect(typeof u.name).to.eql(\"string\")\r",
-									"    pm.expect(typeof u.username).to.eql(\"string\")\r",
-									"    pm.expect(typeof u.email).to.eql(\"string\")\r",
-									"})\r",
-									"\r",
-									"// 5) Campos básicos devem existir\r",
-									"pm.test(\"Contém id\", () => pm.expect(newUser).to.have.property(\"id\"));\r",
-									"pm.test(\"Contém name, username e email (Usuário validado)\", () => {\r",
+									"// 5) Validação de campos obrigatórios\r",
+									"pm.test(\"Contém campos básicos\", () => {\r",
+									"  pm.expect(newUser).to.have.property(\"id\");\r",
 									"  pm.expect(newUser).to.have.property(\"name\");\r",
 									"  pm.expect(newUser).to.have.property(\"username\");\r",
 									"  pm.expect(newUser).to.have.property(\"email\");\r",
 									"});\r",
 									"\r",
-									"// 6) Tipos corretos\r",
-									"pm.test(\"Informações corretas (Regras de contrato)\", () => {\r",
+									"// 6) Validação de tipos de dados\r",
+									"pm.test(\"Tipos corretos (Contrato da API)\", () => {\r",
 									"  pm.expect(newUser.id).to.be.a(\"number\");\r",
 									"  pm.expect(newUser.name).to.be.a(\"string\");\r",
 									"  pm.expect(newUser.username).to.be.a(\"string\");\r",
 									"  pm.expect(newUser.email).to.be.a(\"string\");\r",
 									"});\r",
 									"\r",
-									"// 7) Encadeamento: salvar o id criado, mas separado\r",
-									"pm.environment.set(\"createdUserId\", newUser.id);\r",
+									"// 7) Encadeamento de variáveis\r",
+									"pm.environment.set(\"createdUserId\", newUser.id); // id do novo usuário (fake)\r",
+									"pm.environment.set(\"userId\", 1); // reset para um válido, evitando erro no GET\r",
 									"\r",
-									"// 8) Resetar userId para um válido (1), evitando erro nos próximos 'GET'\r",
-									"pm.environment.set(\"userId\", 1);\r",
-									"\r",
-									"// (Opcional) log para debug\r",
-									"console.log(\"Usuário criado (fake):\", newUser);"
+									"// 8) Log para debug\r",
+									"console.log(\"Usuário criado (fake):\", newUser);\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -395,7 +385,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Teste Teste\",\r\n  \"username\": \"teste_teste\",\r\n  \"email\": \r\n",
+									"raw": "{\r\n  \"status\": 400,\r\n  \"error\": \"Bad Request\",\r\n  \"message\": \"O campo 'email' deve ser válido\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -418,8 +408,184 @@
 							"body": ""
 						}
 					]
+				},
+				{
+					"name": "Atualizar usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 1) Status 200 (OK)\r",
+									"pm.test(\"Status 200 (OK)\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"// 2) Resposta deve ser JSON\r",
+									"pm.test(\"JSON válido\", () => pm.response.to.be.json);\r",
+									"\r",
+									"// 3) SLA simples\r",
+									"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800));\r",
+									"\r",
+									"// 4) Parse seguro\r",
+									"let updatedUser;\r",
+									"try {\r",
+									"  updatedUser = pm.response.json();\r",
+									"} catch (e) {\r",
+									"  updatedUser = {};\r",
+									"  console.error(\"Falha ao parsear JSON:\", e);\r",
+									"}\r",
+									"\r",
+									"// 5) Validação de campos obrigatórios\r",
+									"pm.test(\"Contém id, name, username e email\", () => {\r",
+									"  pm.expect(updatedUser).to.have.property(\"id\");\r",
+									"  pm.expect(updatedUser).to.have.property(\"name\");\r",
+									"  pm.expect(updatedUser).to.have.property(\"username\");\r",
+									"  pm.expect(updatedUser).to.have.property(\"email\");\r",
+									"});\r",
+									"\r",
+									"// 6) Tipos corretos\r",
+									"pm.test(\"Tipos corretos\", () => {\r",
+									"  pm.expect(updatedUser.id).to.be.a(\"number\");\r",
+									"  pm.expect(updatedUser.name).to.be.a(\"string\");\r",
+									"  pm.expect(updatedUser.username).to.be.a(\"string\");\r",
+									"  pm.expect(updatedUser.email).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"// 7) Comparar com os valores enviados no Body\r",
+									"pm.test(\"Nome atualizado corretamente\", () => {\r",
+									"  pm.expect(updatedUser.name).to.eql(\"Teste Atualizado\");\r",
+									"});\r",
+									"pm.test(\"Username atualizado corretamente\", () => {\r",
+									"  pm.expect(updatedUser.username).to.eql(\"teste.atualizado\");\r",
+									"});\r",
+									"pm.test(\"Email atualizado corretamente\", () => {\r",
+									"  pm.expect(updatedUser.email).to.eql(\"teste.atualizado@example.com\");\r",
+									"});\r",
+									"\r",
+									"// 8) Encadeamento: mantém userId para próximos testes\r",
+									"pm.environment.set(\"userId\", updatedUser.id);\r",
+									"\r",
+									"// 9) Log para debug\r",
+									"console.log(\"Usuário atualizado (fake):\", updatedUser);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": {{userId}},\r\n  \"name\": \"Teste Atualizado\",\r\n  \"username\": \"teste.atualizado\",\r\n  \"email\": \"teste.atualizado@example.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/{{userId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
+		},
+		{
+			"name": "Atualização parcial de usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1) Status esperado: 200 OK\r",
+							"pm.test(\"Status 200 (OK)\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"// 2) Conteúdo deve ser JSON\r",
+							"pm.test(\"JSON válido\", () => pm.response.to.be.json);\r",
+							"\r",
+							"// 3) SLA de tempo de resposta (performance simples)\r",
+							"pm.test(\"Tempo < 800ms\", () => pm.expect(pm.response.responseTime).to.be.below(800));\r",
+							"\r",
+							"// 4) Parse seguro da resposta\r",
+							"let patchedUser;\r",
+							"try {\r",
+							"  patchedUser = pm.response.json();\r",
+							"} catch (e) {\r",
+							"  patchedUser = {};\r",
+							"  console.error(\"Falha ao parsear JSON:\", e);\r",
+							"}\r",
+							"\r",
+							"// 5) Validar que existe o objeto address\r",
+							"pm.test(\"Contém objeto address\", () => {\r",
+							"  pm.expect(patchedUser).to.have.property(\"address\");\r",
+							"});\r",
+							"\r",
+							"// 6) Validar que dentro de address existem street e suite\r",
+							"pm.test(\"Contém street e suite dentro de address\", () => {\r",
+							"  pm.expect(patchedUser.address).to.have.property(\"street\");\r",
+							"  pm.expect(patchedUser.address).to.have.property(\"suite\");\r",
+							"});\r",
+							"\r",
+							"// 7) Validar que os valores atualizados foram refletidos na resposta\r",
+							"pm.test(\"Valores de address corretos\", () => {\r",
+							"  pm.expect(patchedUser.address.street).to.eql(\"Light Flowers\");\r",
+							"  pm.expect(patchedUser.address.suite).to.eql(\"Apt. 1995\");\r",
+							"});\r",
+							"\r",
+							"// 8) Validar tipos corretos\r",
+							"pm.test(\"Tipos corretos\", () => {\r",
+							"  pm.expect(patchedUser.address.street).to.be.a(\"string\");\r",
+							"  pm.expect(patchedUser.address.suite).to.be.a(\"string\");\r",
+							"});\r",
+							"\r",
+							"// 9) Encadeamento: manter userId salvo para próximas requests\r",
+							"if (patchedUser.id) {\r",
+							"  pm.environment.set(\"userId\", patchedUser.id);\r",
+							"}\r",
+							"\r",
+							"// 10) Log para debug (aparece no Postman Console)\r",
+							"console.log(\"Usuário atualizado parcialmente (fake):\", patchedUser);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": {\r\n        \"street\": \"Light Flowers\",\r\n        \"suite\": \"Apt. 1995\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{userId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
