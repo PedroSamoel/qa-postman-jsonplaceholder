@@ -27,7 +27,10 @@ para criar e validar cenários de **CRUD** (Create, Read, Update, Delete).
 3. Selecione o Environment no topo do Postman.
 4. Execute as requisições na ordem CRUD.
 
-## 📊 Estatísticas
+
+
+
+## <h1 align="center">📊 Estatísticas
 
 ### 👤 Perfil GitHub
 ![Pedro's GitHub stats](https://github-readme-stats.vercel.app/api?username=PedroSamoel&show_icons=true&theme=merko)
@@ -43,10 +46,25 @@ para criar e validar cenários de **CRUD** (Create, Read, Update, Delete).
 
 ---
 
-### 📈 Gráfico de Contribuições
+### <h1 align="center">📈 Gráfico de Contribuições
 ![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=PedroSamoel&theme=merko)
 
+<h1 align="center">
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pedro-samoel/)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/PedroSamoel)
 [![Email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:pedrosamoel.qa@gmail.com)
+
+
+## <h1 align="center">🔄 Fluxo do CRUD – Usuários
+
+```mermaid
+flowchart LR
+    A[GET /users] --> B[GET /users/:id]
+    B --> C[POST /users]
+    C --> D[PUT /users/:id]
+    D --> E[PATCH /users/:id]
+    E --> F[DELETE /users/:id]
+
+
+
